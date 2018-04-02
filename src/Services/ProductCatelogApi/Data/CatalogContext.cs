@@ -49,7 +49,7 @@
 
         private void ConfigureCatalogBrand(EntityTypeBuilder<CatalogBrand> builder)
         {
-            builder.ToTable("Brand");
+            builder.ToTable("Type");
             builder.Property(c => c.Id)
                 .ForSqlServerUseSequenceHiLo("Catalog_brand_hilo")
                 .IsRequired(true);
@@ -57,3 +57,6 @@
         }
     }
 }
+
+//dotnet ef migrations add init -o Data/Migrations -c contextname
+//dotnet ef database update init

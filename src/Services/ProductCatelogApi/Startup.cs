@@ -11,6 +11,10 @@ using Microsoft.Extensions.Options;
 
 namespace ProductCatelogApi
 {
+    using Microsoft.EntityFrameworkCore;
+
+    using ProductCatelogApi.Data;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -23,6 +27,7 @@ namespace ProductCatelogApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CatalogContext>(o => o.UseSqlServer(Configuration["ConnectionString"]));
             services.AddMvc();
         }
 
