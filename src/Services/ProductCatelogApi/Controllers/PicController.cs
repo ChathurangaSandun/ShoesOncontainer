@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProductCatelogApi.Controllers
 {
+    using System.IO;
+
     using Microsoft.AspNetCore.Hosting;
 
     [Produces("application/json")]
@@ -21,7 +23,10 @@ namespace ProductCatelogApi.Controllers
 
         public IActionResult GetImage(int id)
         {
-
+            var rootPath = this._env.WebRootPath;
+            var path = Path.Combine(rootPath + "Pics", "shoes-" + id + ".png");
+            var buffer = System.IO.File.ReadAllBytes(path);
+            return File(buffer, "image/png");
         }
     }
 }
