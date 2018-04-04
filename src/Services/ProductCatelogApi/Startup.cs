@@ -15,6 +15,8 @@ namespace ProductCatelogApi
 
     using ProductCatelogApi.Data;
 
+    using Swashbuckle.AspNetCore.Swagger;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -27,6 +29,10 @@ namespace ProductCatelogApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info { Title = "Contacts API", Version = "v1" });
+                });
             services.Configure<CatalogSettings>(Configuration) ;
             services.AddDbContext<CatalogContext>(o => o.UseSqlServer(Configuration["ConnectionString"]));
             services.AddMvc();
@@ -39,6 +45,12 @@ namespace ProductCatelogApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Contacts API V1");
+                });
 
             app.UseMvc();
         }

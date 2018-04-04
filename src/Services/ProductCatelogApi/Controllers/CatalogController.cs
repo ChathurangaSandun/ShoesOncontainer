@@ -169,9 +169,4 @@ namespace ProductCatelogApi.Controllers
             return pageOnItems;
         }
     }
-
-
-
-
-
 }

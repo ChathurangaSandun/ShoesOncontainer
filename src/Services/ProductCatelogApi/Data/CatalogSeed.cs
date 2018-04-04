@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 
 namespace ProductCatelogApi.Data
 {
+    using Microsoft.EntityFrameworkCore;
+
     using ProductCatelogApi.Domain;
 
     public class CatalogSeed
     {
         public static async Task SeedAsync(CatalogContext context)
         {
+            context.Database.Migrate();
             if (!context.CatalogBrands.Any())
             {
                 context.CatalogBrands.AddRange(GetPreconfiguredCatalogBrands());
