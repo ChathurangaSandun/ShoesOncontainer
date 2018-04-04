@@ -21,12 +21,21 @@ namespace ProductCatelogApi.Controllers
             this._env = env;
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
         public IActionResult GetImage(int id)
         {
-            var rootPath = this._env.WebRootPath;
-            var path = Path.Combine(rootPath + "Pics", "shoes-" + id + ".png");
-            var buffer = System.IO.File.ReadAllBytes(path);
-            return File(buffer, "image/png");
+            try
+            {
+                var rootPath = this._env.WebRootPath;
+                var path = Path.Combine(rootPath + "/Pics", "shoes-" + id + ".png");
+                var buffer = System.IO.File.ReadAllBytes(path);
+                return File(buffer, "image/png");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
