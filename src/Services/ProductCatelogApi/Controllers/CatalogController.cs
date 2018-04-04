@@ -8,6 +8,7 @@ namespace ProductCatelogApi.Controllers
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
+    using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
     using ProductCatelogApi.Data;
     using ProductCatelogApi.Domain;
@@ -120,6 +121,46 @@ namespace ProductCatelogApi.Controllers
             pageOnItems = this.SetPicImage(pageOnItems);
             var viewModel = new PagenatedItemsViewModel<CatalogItem>(pageSize, pageIndex, totalCount, pageOnItems);
             return this.Ok(viewModel);
+        }
+
+        [HttpPost]
+        [Route("items")]
+        public async Task<IActionResult> CreateProduct([FromBody] CatalogItem item)
+        {
+            this._context.CatalogItems.Add(item);
+            await this._context.SaveChangesAsync();
+            return this.CreatedAtAction("GetItemById", new { id = item.Id });
+        }
+
+        [HttpPut]
+        [Route("items")]
+        public async Task<IActionResult> UpdateProduct([FromBody] CatalogItem updatedItem)
+        {
+            var item = await this._context.CatalogItems.SingleOrDefaultAsync(o => o.Id == updatedItem.Id);
+            if (item == null)
+            {
+                return this.NotFound(new { Message = $"Item with id {updatedItem.Id} not found" });
+            }
+
+            item = updatedItem;
+            this._context.CatalogItems.Update(item);
+            await this._context.SaveChangesAsync();
+            return this.CreatedAtAction("GetItemById", new { id = item.Id });
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var item = await this._context.CatalogItems.SingleOrDefaultAsync(o => o.Id == id);
+            if (item == null)
+            {
+                return this.NotFound(new { Message = $"Item with id= {id} not found" });
+            }
+
+            this._context.CatalogItems.Remove(item);
+            await this._context.SaveChangesAsync();
+            return this.NoContent();
         }
 
         private List<CatalogItem> SetPicImage(List<CatalogItem> pageOnItems)
