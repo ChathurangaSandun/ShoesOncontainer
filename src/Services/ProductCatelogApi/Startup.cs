@@ -29,12 +29,27 @@ namespace ProductCatelogApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+            //// string connection string 
+            var server = Configuration["DatabaseServer"];
+            var database = Configuration["DatabaseName"];
+            var user = Configuration["DatabaseUser"];
+            var password = Configuration["DatabasePassword"];
+            var connectionString = String.Format("Server={0};Database={1};User={2};Password={3};MultipleActiveResultSets=true;", server, database, user, password);
+
             services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Info { Title = "Contacts API", Version = "v1" });
                 });
+
             services.Configure<CatalogSettings>(Configuration) ;
-            services.AddDbContext<CatalogContext>(o => o.UseSqlServer(Configuration["ConnectionString"]));
+
+            //// services.AddDbContext<CatalogContext>(o => o.UseSqlServer(Configuration["ConnectionString"]));
+            services.AddDbContext<CatalogContext>(o => o.UseSqlServer(connectionString));
+
+            Console.WriteLine(connectionString);
+
             services.AddMvc();
         }
 
