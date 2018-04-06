@@ -23,24 +23,22 @@ namespace WebMvc.Controllers
             int itemsPage = 10;
             var catalog = await _catalogSvc.GetCatalogItems(page ?? 0, itemsPage, BrandFilterApplied, TypesFilterApplied);
             var vm = new CatalogIndexViewModel()
-                         {
-                             CatalogItems = catalog.Data,
-                             Brands = await _catalogSvc.GetBrands(),
-                             Types = await _catalogSvc.GetTypes(),
-                             BrandFilterApplied = BrandFilterApplied ?? 0,
-                             TypesFilterApplied = TypesFilterApplied ?? 0,
-                             PaginationInfo = new PaginationInfo()
-                                                  {
-                                                      ActualPage = page ?? 0,
-                                                      ItemsPerPage = itemsPage, //catalog.Data.Count,
-                                                      TotalItems = catalog.Count,
-                                                      TotalPages = (int)Math.Ceiling(((decimal)catalog.Count / itemsPage))
-                                                  }
-                         };
-
+            {
+                CatalogItems = catalog.Data,
+                Brands = await _catalogSvc.GetBrands(),
+                Types = await _catalogSvc.GetTypes(),
+                BrandFilterApplied = BrandFilterApplied ?? 0,
+                TypesFilterApplied = TypesFilterApplied ?? 0,
+                PaginationInfo = new PaginationInfo()
+                {
+                    ActualPage = page ?? 0,
+                    ItemsPerPage = itemsPage, //catalog.Data.Count,
+                    TotalItems = catalog.Count,
+                    TotalPages = (int)Math.Ceiling(((decimal)catalog.Count / itemsPage))
+                }
+            };
             vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
             vm.PaginationInfo.Previous = (vm.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";
-
             return View(vm);
         }
     }
